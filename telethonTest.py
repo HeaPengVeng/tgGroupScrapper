@@ -53,10 +53,10 @@ async def scrapUsers(botToken, groups,latestId):
       for group in groups:
         totalGroups += 1
         try:
-          print(f'Checking {group['group_title']} with bot {botId}')
+          print(f"Checking {group['group_title']} with bot {botId}")
           if group['bot_id'] == botId and int(group['id']) > int(latestId):
             groupId = group['chat_id'].replace('-','')
-            print(f'Scraping {group['group_title']}:{groupId} with bot {botId}')
+            print(f"Scraping {group['group_title']}:{groupId} with bot {botId}")
             result = await client(GetFullChatRequest(int(groupId)))
             users = result.users
             usersList = []
@@ -65,7 +65,7 @@ async def scrapUsers(botToken, groups,latestId):
               print(f'No users found in group')
               continue 
             for user in users:
-              print(f'Found user {user.username}')
+              print(f"Found user {user.username}")
               usersList.append({
                 'userId': user.id,
                 'username': user.username,
@@ -73,16 +73,16 @@ async def scrapUsers(botToken, groups,latestId):
                 'lname': user.last_name,
                 'phone': user.phone
               })
-            saveFileName = f'{groupId}_{group['group_title']}'
+            saveFileName = f"{groupId}_{group['group_title']}"
             toCSV(f'{resultDir}/{saveFileName}', usersList)
             progress=group['id']
             totalScrapped += 1
-            print(f'Done scraping {group['group_title']} with bot {botId} ON FILE NAME: {resultDir}/{saveFileName}')
+            print(f"Done scraping {group['group_title']} with bot {botId} ON FILE NAME: {resultDir}/{saveFileName}")
           else:
             totalSkipped += 1
         except Exception as e:
           totalFailed += 1
-          print(f'Failed {group['group_title']} with bot {botId}')
+          print(f"Failed {group['group_title']} with bot {botId}")
           exc_type, exc_obj, exc_tb = sys.exc_info()
           fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
           print(exc_type, fname, exc_tb.tb_lineno, e)
@@ -91,7 +91,7 @@ async def scrapUsers(botToken, groups,latestId):
     except Exception as e:
       print(e)
     finally:
-      print(f'Total: {totalGroups}, Scrapped: {totalScrapped}, Skipped: {totalSkipped}, Failed: {totalFailed}')
+      print(f"Total: {totalGroups}, Scrapped: {totalScrapped}, Skipped: {totalSkipped}, Failed: {totalFailed}")
 
 fromCSVData = fromCSV(groupCSV)
 latestId = -1
